@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -61,6 +61,12 @@ export default function Services() {
     return () => container.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
+  const [revealedCards, setRevealedCards] = useState({});
+
+  const handleMouseEnter = (id) => {
+    setRevealedCards(prev => ({ ...prev, [id]: true }));
+  };
+
   const bgWords = Array(400).fill("Vista Lux Enterprise Architecture Design Luxury Production ").join("");
 
   return (
@@ -109,6 +115,7 @@ export default function Services() {
             <div 
               key={item.id} 
               ref={el => cardsRef.current[idx] = el}
+              onMouseEnter={() => handleMouseEnter(item.id)}
               className="group relative cursor-pointer"
               style={{ '--mouse-x': '50%', '--mouse-y': '50%' }}
             >
@@ -116,7 +123,11 @@ export default function Services() {
                 <img 
                   src={item.image} 
                   alt={item.title}
-                  className="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000"
+                  className={`w-full h-full object-cover transition-all duration-1000 ${
+                    revealedCards[item.id] 
+                      ? 'grayscale-0 opacity-100 scale-100' 
+                      : 'grayscale opacity-90'
+                  } group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105`}
                 />
                 <div 
                   className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
@@ -128,7 +139,9 @@ export default function Services() {
               
               <div className="flex justify-between items-start">
                 <div>
-                  <h3 className="text-2xl md:text-3xl font-serif text-matte-black group-hover:text-champagne-gold transition-colors duration-300 mb-2">
+                  <h3 className={`text-2xl md:text-3xl font-serif transition-colors duration-300 mb-2 ${
+                    revealedCards[item.id] ? 'text-champagne-gold' : 'text-matte-black'
+                  } group-hover:text-champagne-gold`}>
                     {item.title}
                   </h3>
                   <p className="text-sm text-matte-black/40 font-sans max-w-sm">
@@ -136,7 +149,9 @@ export default function Services() {
                   </p>
                 </div>
                 <div className="pt-2">
-                  <ArrowUpRight className="text-matte-black/20 group-hover:text-champagne-gold group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" />
+                  <ArrowUpRight className={`transition-all duration-300 ${
+                    revealedCards[item.id] ? 'text-champagne-gold translate-x-1 -translate-y-1' : 'text-matte-black/20'
+                  } group-hover:text-champagne-gold group-hover:translate-x-1 group-hover:-translate-y-1`} />
                 </div>
               </div>
             </div>
