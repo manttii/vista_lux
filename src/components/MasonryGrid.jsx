@@ -75,7 +75,7 @@ const projects = [
   }
 ];
 
-export default function MasonryGrid() {
+export default function MasonryGrid({ onNavigate }) {
   const containerRef = useRef(null);
 
   useGSAP(() => {
@@ -134,7 +134,11 @@ export default function MasonryGrid() {
 
       <div className="grid grid-cols-12 gap-y-24 md:gap-x-8 lg:gap-x-12">
         {projects.map((project) => (
-          <div key={project.id} className={`portfolio-card-wrapper ${project.className}`}>
+          <div 
+            key={project.id} 
+            className={`portfolio-card-wrapper ${project.className} cursor-pointer`}
+            onClick={() => onNavigate('portfolio')}
+          >
             <PortfolioCard 
               title={project.title}
               projectNumber={project.projectNumber}

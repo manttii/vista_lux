@@ -9,7 +9,18 @@ const links = [
   { num: '05', title: 'Inquire' },
 ];
 
-export default function Menu({ isOpen, onClose }) {
+export default function Menu({ isOpen, onClose, onNavigate, currentPage }) {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   // We can add entrance animations later if needed, but for now simple conditional rendering or opacity transition
   
   if (!isOpen) return null;
@@ -17,7 +28,7 @@ export default function Menu({ isOpen, onClose }) {
   return (
     <div className="fixed inset-0 z-[100] bg-pure-white text-matte-black flex flex-col pt-8 px-6 md:px-12 overflow-y-auto">
       {/* Header of Menu */}
-      <div className="flex justify-between items-center w-full mb-24">
+      <div className="flex justify-between items-center w-full mb-12">
         <div className="text-xl font-serif tracking-widest uppercase font-semibold">Vista Lux</div>
         <button 
           onClick={onClose}
@@ -30,22 +41,26 @@ export default function Menu({ isOpen, onClose }) {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 flex-1 pb-12">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-4 flex-1 pb-6">
         {/* Left Col - The Index */}
         <div className="lg:col-span-2 text-xs font-sans tracking-[0.2em] uppercase font-light text-matte-black/60">
           <p>The Index</p>
-          <p>— 01 / 05</p>
+          <p>— {{ home: '01', index: '01', portfolio: '02', philosophy: '03', journal: '04', inquire: '05' }[currentPage] || '01'} / 05</p>
         </div>
 
         {/* Center Col - Main Links */}
-        <div className="lg:col-span-7 flex flex-col gap-6">
+        <div className="lg:col-span-7 flex flex-col gap-3">
           {links.map((link) => (
-            <div key={link.num} className="group border-b border-champagne-gold/20 pb-4 flex items-end justify-between cursor-pointer">
+            <div 
+              key={link.num} 
+              className="group border-b border-champagne-gold/20 pb-4 flex items-end justify-between cursor-pointer"
+              onClick={() => { onNavigate(link.title.toLowerCase()); onClose(); }}
+            >
               <div className="flex items-start gap-8">
                 <span className="text-[10px] font-sans tracking-[0.2em] uppercase text-champagne-gold mt-4">
                   — {link.num}
                 </span>
-                <span className="text-5xl md:text-7xl lg:text-[7rem] font-serif leading-none group-hover:text-champagne-gold transition-colors duration-500">
+                <span className="text-3xl md:text-5xl lg:text-6xl font-serif leading-none group-hover:text-champagne-gold transition-colors duration-500">
                   {link.title}
                 </span>
               </div>

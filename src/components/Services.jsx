@@ -98,7 +98,7 @@ export default function Services() {
       <div className="relative z-10 px-6 md:px-12 max-w-[2000px] mx-auto">
         <div className="text-center mb-24">
           <h2 className="text-4xl md:text-6xl lg:text-8xl font-serif text-matte-black mb-6 tracking-tight">
-            Luxury Retail
+            Luxury <span className="italic font-light">Retail</span>
           </h2>
           <p className="text-sm md:text-base font-sans tracking-widest text-matte-black/40 uppercase">
             Creating beautiful stores for luxury brands in malls and airports.
@@ -142,7 +142,11 @@ export default function Services() {
                   <h3 className={`text-2xl md:text-3xl font-serif transition-colors duration-300 mb-2 ${
                     revealedCards[item.id] ? 'text-champagne-gold' : 'text-matte-black'
                   } group-hover:text-champagne-gold`}>
-                    {item.title}
+                    {item.title.split(' ').map((word, i, arr) => (
+                      <span key={i} className={i === arr.length - 1 ? "italic font-light" : ""}>
+                        {word}{' '}
+                      </span>
+                    ))}
                   </h3>
                   <p className="text-sm text-matte-black/40 font-sans max-w-sm">
                     {item.desc}

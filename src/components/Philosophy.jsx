@@ -1,6 +1,6 @@
 export default function Philosophy() {
   return (
-    <section className="py-32 px-6 md:px-12 lg:px-24 bg-pure-white w-full max-w-[2000px] mx-auto border-b border-champagne-gold/50">
+    <div className="pt-40 pb-32 px-6 md:px-12 lg:px-24 bg-pure-white w-full max-w-[2000px] mx-auto border-b border-champagne-gold/50 min-h-screen">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8">
         
         {/* Left Column - Label */}
@@ -59,6 +59,6 @@ export default function Philosophy() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
