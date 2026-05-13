@@ -53,6 +53,7 @@ export default function Portfolio() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [hoveredProject, setHoveredProject] = useState(null);
   const [hoverTimeout, setHoverTimeout] = useState(null);
+  const [boxLoadedImages, setBoxLoadedImages] = useState({});
   
   const [projectImageIndexes, setProjectImageIndexes] = useState({ 
     1: { current: 0, prev: 0 }, 
@@ -173,7 +174,10 @@ export default function Portfolio() {
             </div>
 
             {/* Middle: Image Slideshow */}
-            <div className="relative w-64 h-80 overflow-hidden shadow-md">
+            <div className="relative w-64 h-80 overflow-hidden shadow-md bg-gray-100">
+              {/* Skeleton Shimmer Background */}
+              <div className="absolute inset-0 animate-shimmer"></div>
+
               {hoveredProject.images.map((img, idx) => {
                 const currentIdx = projectImageIndexes[hoveredProject.id]?.current ?? 0;
                 const prevIdx = projectImageIndexes[hoveredProject.id]?.prev ?? 0;
@@ -185,12 +189,15 @@ export default function Portfolio() {
                   posClass = "opacity-100 -translate-x-full z-0";
                 }
                 
+                const isLoaded = boxLoadedImages[`${hoveredProject.id}_${idx}`];
+                
                 return (
                   <img 
                     key={idx}
                     src={img} 
                     alt={hoveredProject.title}
-                    className={`absolute inset-0 w-full h-full object-cover transition-all duration-[1.5s] ease-in-out ${posClass}`}
+                    onLoad={() => setBoxLoadedImages(prev => ({ ...prev, [`${hoveredProject.id}_${idx}`]: true }))}
+                    className={`absolute inset-0 w-full h-full object-cover transition-all duration-[1.5s] ease-in-out ${posClass} ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
                   />
                 );
               })}
@@ -227,13 +234,18 @@ export default function Portfolio() {
 }
 
 function ProjectTile({ project, currentImageIdx, prevImageIdx, onMouseEnter, onMouseLeave, onClick }) {
+  const [loadedImages, setLoadedImages] = useState({});
+
   return (
     <div 
-      className="relative aspect-[4/5] overflow-hidden cursor-pointer group bg-gray-50 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-500"
+      className="relative aspect-[4/5] overflow-hidden cursor-pointer group bg-gray-100 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-500"
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
+      {/* Skeleton Shimmer Background */}
+      <div className="absolute inset-0 animate-shimmer"></div>
+
       {/* Images with transition */}
       <div className="w-full h-full relative">
         {project.images.map((img, idx) => {
@@ -244,12 +256,15 @@ function ProjectTile({ project, currentImageIdx, prevImageIdx, onMouseEnter, onM
             posClass = "opacity-100 -translate-x-full z-0";
           }
           
+          const isLoaded = loadedImages[idx];
+          
           return (
             <img 
               key={idx}
               src={img} 
               alt={project.title}
-              className={`absolute inset-0 w-full h-full object-cover transition-all duration-[1.5s] ease-in-out ${posClass} group-hover:scale-105 transition-transform duration-[2s]`}
+              onLoad={() => setLoadedImages(prev => ({ ...prev, [idx]: true }))}
+              className={`absolute inset-0 w-full h-full object-cover transition-all duration-[1.5s] ease-in-out ${posClass} group-hover:scale-105 transition-transform duration-[2s] ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
             />
           );
         })}

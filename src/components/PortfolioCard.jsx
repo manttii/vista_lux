@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
@@ -27,16 +27,22 @@ export default function PortfolioCard({ image, title, projectNumber, folio, loca
     };
   }, { scope: cardRef });
 
+  const [isLoaded, setIsLoaded] = useState(false);
+
   return (
     <div 
       ref={cardRef} 
       className={`group relative bg-white cursor-pointer ${className}`}
     >
-      <div className="aspect-[4/5] overflow-hidden border border-matte-black/5">
+      <div className="aspect-[4/5] overflow-hidden border border-matte-black/5 bg-gray-100 relative">
+        {/* Skeleton Shimmer Background */}
+        <div className="absolute inset-0 animate-shimmer"></div>
+
         <img 
           src={image} 
           alt={title} 
-          className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
+          onLoad={() => setIsLoaded(true)}
+          className={`w-full h-full object-cover transition-all duration-1000 ease-out group-hover:scale-105 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
         />
       </div>
       
